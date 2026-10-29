@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#1F3864">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='22' fill='%231F3864'/&gt;&lt;circle cx='50' cy='50' r='26' fill='none' stroke='white' stroke-width='9'/&gt;&lt;/svg&gt;">
+<meta name="description" content="北京工商大学大学生创造力快速测评（前后测对比版）">
+<title>创造力快速测验 · 北京工商大学</title>
+<style>
+:root{
+  --brand:#1F3864;
+  --brand2:#2E74B5;
+  --accent:#E8A33D;
+  --bg:#F4F6FA;
+  --card:#FFFFFF;
+  --text:#1B1F27;
+  --sub:#6B7280;
+  --line:#E5E9F0;
+  --ok:#12A150;
+  --radius:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  font-size:15px;
+  line-height:1.6;
+  -webkit-text-size-adjust:100%;
+  overscroll-behavior-y:contain;
+}
+.app{
+  max-width:520px;
+  margin:0 auto;
+  min-height:100vh;
+  min-height:100dvh;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+}
+.screen{display:none;flex:1;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* ---------- 通用 ---------- */
+.pad{padding:20px 18px calc(24px + env(safe-area-inset-bottom));}
+.btn{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;border:none;border-radius:14px;
+  padding:15px 16px;font-size:16px;font-weight:600;
+  background:var(--brand);color:#fff;
+  font-family:inherit;letter-spacing:.5px;
+  transition:transform .12s ease,opacity .12s ease;
+}
+.btn:active{transform:scale(.985);opacity:.9;}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand);}
+.btn.sub{background:#EEF3FB;color:var(--brand2);}
+.btn.light{background:#fff;color:var(--text);border:1px solid var(--line);}
+.btn[disabled]{opacity:.45;}
+.card{
+  background:var(--card);border-radius:var(--radius);
+  padding:18px;box-shadow:0 2px 14px rgba(31,56,100,.06);
+}
+.muted{color:var(--sub);}
+.small{font-size:13px;}
+.tiny{font-size:12px;}
+
+/* ---------- 封面 ---------- */
+.cover{
+  background:linear-gradient(160deg,#1F3864 0%,#2E74B5 100%);
+  color:#fff;padding:calc(34px + env(safe-area-inset-top)) 20px 30px;
+  border-bottom-left-radius:26px;border-bottom-right-radius:26px;
+}
+.cover .school{font-size:13px;opacity:.85;letter-spacing:2px;}
+.cover h1{font-size:26px;margin:10px 0 6px;letter-spacing:1px;line-height:1.35;}
+.cover .tag{
+  display:inline-block;margin-top:8px;padding:4px 10px;border-radius:999px;
+  background:rgba(255,255,255,.16);font-size:12px;letter-spacing:1px;
+}
+.meta-row{display:flex;gap:10px;margin-top:16px;}
+.meta-box{
+  flex:1;background:rgba(255,255,255,.13);border-radius:12px;
+  padding:10px;text-align:center;
+}
+.meta-box b{display:block;font-size:18px;letter-spacing:.5px;}
+.meta-box span{font-size:11px;opacity:.85;}
+
+/* ---------- 卷别选择 ---------- */
+.section-title{font-size:14px;font-weight:700;color:var(--brand);margin:22px 0 10px;letter-spacing:.5px;}
+.mode-tabs{display:flex;gap:10px;}
+.mode-tab{
+  flex:1;background:#fff;border:1.5px solid var(--line);border-radius:14px;
+  padding:13px 12px;text-align:left;font-family:inherit;font-size:14px;color:var(--sub);
+  transition:all .15s ease;
+}
+.mode-tab b{display:block;font-size:15px;color:var(--text);margin-bottom:2px;}
+.mode-tab.on{border-color:var(--brand);background:#EEF3FB;box-shadow:0 0 0 3px rgba(46,116,181,.10);}
+.mode-tab.on b{color:var(--brand);}
+
+.field{margin-top:12px;}
+.field label{display:block;font-size:12px;color:var(--sub);margin-bottom:6px;}
+.field input{
+  width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;
+  padding:12px 14px;font-size:15px;font-family:inherit;color:var(--text);
+  outline:none;transition:border-color .15s;
+}
+.field input:focus{border-color:var(--brand2);}
+
+.notice{
+  display:flex;gap:10px;background:#FFF8EC;border-radius:12px;
+  padding:12px 14px;margin-top:16px;font-size:12.5px;color:#8A5A12;line-height:1.55;
+}
+
+/* ---------- 答题页 ---------- */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(244,246,250,.94);
+  backdrop-filter:blur(12px);
+  padding:calc(10px + env(safe-area-inset-top)) 18px 10px;
+  border-bottom:1px solid var(--line);
+}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.pill{
+  font-size:12px;font-weight:600;color:var(--brand);
+  background:#E6EEF9;padding:5px 10px;border-radius:999px;letter-spacing:.5px;
+}
+.clock{
+  font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;color:var(--brand);
+  background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;
+}
+.clock.warn{color:#C0392B;border-color:#F3C9C4;background:#FDF1EF;}
+.progress{height:5px;background:#E3E8F1;border-radius:999px;margin-top:10px;overflow:hidden;}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,#2E74B5,#1F3864);border-radius:999px;transition:width .3s ease;}
+
+.qtag{
+  display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:1px;
+  color:var(--brand2);background:#EAF1FA;border-radius:6px;padding:3px 8px;margin-bottom:10px;
+}
+.qtitle{font-size:19px;font-weight:700;line-height:1.45;margin:0 0 8px;color:var(--text);}
+.qdesc{font-size:14.5px;color:#374151;margin:0 0 10px;}
+.qhint{
+  font-size:12.5px;color:#8A5A12;background:#FFF8EC;border-radius:10px;
+  padding:9px 12px;margin-bottom:14px;line-height:1.55;
+}
+textarea{
+  width:100%;min-height:210px;resize:vertical;border:1px solid var(--line);
+  border-radius:14px;padding:14px;font-size:15px;line-height:1.7;
+  font-family:inherit;color:var(--text);background:#fff;outline:none;
+  transition:border-color .15s;
+}
+textarea:focus{border-color:var(--brand2);}
+.counter{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--sub);}
+.counter b{color:var(--brand);font-size:14px;}
+
+/* ---------- 画布 ---------- */
+.canvas-wrap{
+  position:relative;width:100%;border-radius:14px;overflow:hidden;
+  background:#fff;border:1px solid var(--line);
+}
+.canvas-wrap canvas{display:block;width:100%;height:auto;touch-action:none;}
+#drawCanvas{position:absolute;left:0;top:0;}
+.tools{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.tool{
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  border:1px solid var(--line);background:#fff;border-radius:11px;
+  padding:8px 9px;font-size:12.5px;font-family:inherit;color:var(--text);
+  white-space:nowrap;
+}
+.tool.on{border-color:var(--brand);color:var(--brand);background:#EEF3FB;}
+.tool .dot{width:14px;height:14px;border-radius:50%;}
+.tool.wide{flex:1;}
+
+/* ---------- 底部操作 ---------- */
+.actionbar{
+  position:sticky;bottom:0;
+  background:linear-gradient(180deg,rgba(244,246,250,0),rgba(244,246,250,.96) 26%);
+  padding:14px 18px calc(16px + env(safe-area-inset-bottom));
+  display:flex;gap:10px;
+}
+.actionbar .btn{flex:1;}
+
+/* ---------- 结果 ---------- */
+.score-hero{
+  background:linear-gradient(160deg,#1F3864,#2E74B5);
+  border-radius:var(--radius);color:#fff;padding:24px 20px;text-align:center;
+  box-shadow:0 8px 24px rgba(31,56,100,.18);
+}
+.score-hero .num{font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-1px;}
+.score-hero .num small{font-size:16px;font-weight:500;opacity:.75;letter-spacing:0;}
+.score-hero .lvl{display:inline-block;margin-top:10px;background:rgba(255,255,255,.18);border-radius:999px;padding:5px 14px;font-size:13px;letter-spacing:1px;}
+.dim{margin-top:16px;}
+.dim-row{margin-bottom:12px;}
+.dim-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
+.dim-head b{color:var(--brand);}
+.bar{height:8px;background:#E9EDF4;border-radius:999px;overflow:hidden;}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#2E74B5,#1F3864);transition:width .8s cubic-bezier(.22,1,.36,1);}
+.bar i.alt{background:linear-gradient(90deg,#F0B45A,#E8A33D);}
+.artwork{width:100%;border-radius:12px;border:1px solid var(--line);margin-top:10px;background:#fff;}
+.cmp-table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+.cmp-table th,.cmp-table td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:center;}
+.cmp-table th{font-size:12px;color:var(--sub);font-weight:600;}
+.cmp-table td:first-child,.cmp-table th:first-child{text-align:left;}
+.cmp-table .up{color:var(--ok);font-weight:700;}
+.cmp-table .down{color:#C0392B;font-weight:700;}
+
+/* ---------- 结果页顶部返回 ---------- */
+.result-top{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.icon-btn{
+  width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:17px;color:var(--brand);
+}
+
+.fade-in{animation:fadeIn .32s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ 说明页 ============ -->
+  <section id="screenIntro" class="screen active">
+    <div class="cover">
+      <div class="school">北京工商大学</div>
+      <h1>创造力快速测验</h1>
+      <div>前后测对比版 · 3 题 / 约 6 分钟</div>
+      <div class="tag">基于 Torrance 创造性思维理论</div>
+      <div class="meta-row">
+        <div class="meta-box"><b>3<small style="font-size:11px;"> 题</small></b><span>两个言语题 + 一个画图题</span></div>
+        <div class="meta-box"><b>10<small style="font-size:11px;"> 分钟</small></b><span>全程倒计时</span></div>
+        <div class="meta-box"><b>4<small style="font-size:11px;"> 维度</small></b><span>流畅·变通·独创·精细</span></div>
+      </div>
+    </div>
+
+    <div class="pad">
+      <div class="section-title">选择测验卷别</div>
+      <div class="mode-tabs">
+        <button class="mode-tab on" data-mode="A">
+          <b>A 卷 · 前测</b>
+          <span>训练/课程开始前完成</span>
+        </button>
+        <button class="mode-tab" data-mode="B">
+          <b>B 卷 · 后测</b>
+          <span>训练/课程结束后完成</span>
+        </button>
+      </div>
+
+      <div class="field">
+        <label>姓名（选填，用于前后测配对）</label>
+        <input id="inpName" type="text" placeholder="请输入姓名" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>学号（选填）</label>
+        <input id="inpSid" type="text" placeholder="请输入学号" inputmode="numeric" autocomplete="off">
+      </div>
+
+      <div class="notice">
+        <span class="tiny" style="font-weight:700;color:#B47712;flex:0 0 auto;">提示</span>
+        <span>答案没有对错，请凭第一反应作答。想得越多、越新奇越好；画图题用手指直接画即可。提交后可查看各维度得分，并自动与另一卷对比。</span>
+      </div>
+
+      <div style="height:20px"></div>
+      <button class="btn" id="btnStart">开始测验</button>
+      <p class="tiny muted" style="text-align:center;margin-top:12px;">作答仅用于教学研究，不影响成绩</p>
+    </div>
+  </section>
+
+  <!-- ============ 答题页 ============ -->
+  <section id="screenQuiz" class="screen">
+    <div class="topbar">
+      <div class="topbar-row">
+        <span class="pill" id="quizModeLabel">A卷 · 前测</span>
+        <span class="clock" id="clock">10:00</span>
+      </div>
+      <div class="progress"><i id="progressBar" style="width:33%"></i></div>
+    </div>
+
+    <div class="pad" style="flex:1;">
+      <div id="qBody" class="fade-in"></div>
+    </div>
+
+    <div class="actionbar">
+      <button class="btn light" id="btnPrev" style="flex:0 0 96px;">上一题</button>
+      <button class="btn" id="btnNext">下一题</button>
+    </div>
+  </section>
+
+  <!-- ============ 结果页 ============ -->
+  <section id="screenResult" class="screen">
+    <div class="pad">
+      <div class="result-top">
+        <div class="icon-btn" id="btnHome">‹</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;">测评结果</div>
+          <div class="tiny muted" id="resultMeta"></div>
+        </div>
+      </div>
+
+      <div class="score-hero">
+        <div class="num" id="totalScore">0<small> 分</small></div>
+        <div class="lvl" id="levelTag">—</div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div style="font-weight:700;font-size:14px;color:var(--brand);">各维度得分</div>
+        <div class="dim" id="dimBars"></div>
+      </div>
+
+      <div class="card" id="artCard" style="margin-top:14px;display:none;">
+        <div style="font-weight:700;font-size:14px;color:var(--brand);">你的图形作品</div>
+        <img class="artwork" id="artImg" alt="图形作品">
+        <div class="tiny muted" id="artTitle" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <div style="font-weight:700;font-size:14px;color:var(--brand);">前后测对比</div>
+        <div id="cmpArea"></div>
+      </div>
+
+      <div style="height:18px"></div>
+      <button class="btn sub" id="btnOther" style="margin-bottom:10px;">去做另一卷（完成前后测对比）</button>
+      <button class="btn ghost" id="btnRetry">重新测本卷</button>
+      <div style="height:8px"></div>
+      <button class="btn light" id="btnClear">清除本机记录</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =========================================================
+   1. 题库配置（精简版：2 道言语题 + 1 道画图题）
+   ========================================================= */
+const MODES = {
+  A: {
+    label: "A卷 · 前测",
+    verbal: [
+      {
+        key: "a1",
+        tag: "言语题 · 不寻常用途",
+        title: "空矿泉水瓶，除了装水还能干嘛？",
+        desc: "你手边有一个 500ml 的空矿泉水瓶（带瓶盖）。请想出它尽可能多的新用途。",
+        hint: "每行写一个想法，至少写 5 行。越出人意料越好，不用管是否现实。",
+        placeholder: "例如：剪开当漏斗\n用瓶盖做象棋棋子\n……",
+        minLines: 5,
+        common: ["装水", "喝水", "浇花", "花瓶", "笔筒", "存钱罐", "哑铃", "喷壶", "漏斗", "冰袋", "收纳", "装东西"],
+        categories: [
+          { name: "容器收纳", kw: ["装", "收纳", "存", "盛", "盒", "罐", "花瓶", "笔筒", "储物"] },
+          { name: "工具改造", kw: ["漏斗", "喷壶", "浇", "剪", "工具", "开瓶", "灯", "蜡烛", "壶", "滴灌"] },
+          { name: "运动健身", kw: ["哑铃", "健身", "运动", "锻炼", "保龄", "拉伸"] },
+          { name: "玩具游戏", kw: ["玩具", "游戏", "积木", "弹珠", "沙锤", "棋子", "球"] },
+          { name: "装饰艺术", kw: ["装饰", "艺术", "手工", "画", "盆景", "摆件", "灯罩", "风铃"] },
+          { name: "生活妙用", kw: ["冰", "熨", "枕", "热水", "暖手", "鞋撑", "救生", "浮"] }
+        ]
+      },
+      {
+        key: "a2",
+        tag: "言语题 · 假设想象",
+        title: "如果明天手机突然全部消失……",
+        desc: "假如明天醒来，全世界的手机全都消失了（且无法再造），这一天会怎样？",
+        hint: "请分别写出「可能出现的问题」和「可能带来的好处」，每行一条，共至少 5 条。",
+        placeholder: "问题：无法扫码支付\n问题：联系不上家人\n好处：终于可以安静看书\n……",
+        minLines: 5,
+        common: ["不能联系", "无法支付", "不能扫码", "迷路", "无聊", "焦虑", "无法工作", "效率提高", "睡眠变好", "看路"],
+        categories: [
+          { name: "沟通社交", kw: ["联系", "聊天", "微信", "电话", "沟通", "朋友", "家人", "消息", "见面"] },
+          { name: "工作学习", kw: ["工作", "学习", "效率", "作业", "文件", "会议", "上课", "论文", "专注"] },
+          { name: "生活出行", kw: ["支付", "导航", "出行", "外卖", "公交", "扫码", "付款", "地图", "打车"] },
+          { name: "心理情绪", kw: ["焦虑", "无聊", "轻松", "安静", "不安", "放松", "自由", "孤独"] },
+          { name: "安全应急", kw: ["报警", "急救", "安全", "求助", "紧急", "危险"] },
+          { name: "社会秩序", kw: ["社会", "经济", "行业", "秩序", "混乱", "瘫痪", "服务"] }
+        ]
+      }
+    ],
+    figural: {
+      key: "a3",
+      tag: "画图题 · 圆圈创作",
+      title: "用这些圆圈，画出尽可能多的东西",
+      desc: "用手指在下方圆圈上作画。每个圆圈可以单独用，也可以几个组合起来。",
+      hint: "画满 4 个以上圆圈更划算；画完记得给作品起个标题。",
+      grid: "circles",
+      minUsed: 3
+    }
+  },
+
+  B: {
+    label: "B卷 · 后测",
+    verbal: [
+      {
+        key: "b1",
+        tag: "言语题 · 不寻常用途",
+        title: "拆开的快递纸箱，还能怎么用？",
+        desc: "你有一个 30×20×15cm、已经拆开压扁的快递纸箱。请想出它尽可能多的新用途。",
+        hint: "每条写一个想法，至少写 5 条。越出人意料越好。",
+        placeholder: "例如：给猫做个窝\n剪成书架隔板\n……",
+        minLines: 5,
+        common: ["装东西", "收纳", "猫窝", "书架", "垃圾箱", "储物箱", "垫子", "猫抓板", "卖废品", "垫桌脚"],
+        categories: [
+          { name: "收纳整理", kw: ["收纳", "储物", "装", "整理", "箱", "抽屉", "分类"] },
+          { name: "宠物用品", kw: ["猫", "狗", "宠物", "窝", "抓板", "玩具"] },
+          { name: "家具改造", kw: ["桌", "椅", "柜", "书架", "架子", "垫", "隔板", "灯罩"] },
+          { name: "手工玩具", kw: ["手工", "画板", "模型", "迷宫", "城堡", "机器人", "飞机", "面具"] },
+          { name: "园艺种植", kw: ["种", "花盆", "土", "园艺", "育苗", "堆肥"] },
+          { name: "环保回收", kw: ["回收", "垃圾", "废品", "环保", "隔热", "防潮", "缓冲"] }
+        ]
+      },
+      {
+        key: "b2",
+        tag: "言语题 · 假设想象",
+        title: "如果突然能听懂所有动物说话……",
+        desc: "假如有一天你醒来，突然能听懂所有动物说的话（但它们听不懂你），这一天会怎样？",
+        hint: "请分别写出「可能出现的问题」和「可能带来的好处」，每行一条，共至少 5 条。",
+        placeholder: "问题：知道宠物嫌弃我\n好处：能帮流浪猫找家\n……",
+        minLines: 5,
+        common: ["和猫聊天", "和狗说话", "知道宠物想什么", "听懂鸟叫", "了解动物需求", "知道动物在抱怨"],
+        categories: [
+          { name: "沟通交流", kw: ["交流", "对话", "沟通", "说话", "理解", "聊天"] },
+          { name: "宠物陪伴", kw: ["宠物", "猫", "狗", "陪伴", "养", "流浪"] },
+          { name: "科学研究", kw: ["研究", "科学", "观察", "数据", "实验", "记录"] },
+          { name: "自然生态", kw: ["野生", "自然", "生态", "动物", "森林", "鸟", "保护"] },
+          { name: "心理情绪", kw: ["孤独", "情绪", "安慰", "心理", "倾诉", "烦恼"] },
+          { name: "伦理隐私", kw: ["隐私", "伦理", "秘密", "信任", "道德", "尊重"] }
+        ]
+      }
+    ],
+    figural: {
+      key: "b3",
+      tag: "画图题 · 线条创作",
+      title: "用这些平行线，画出尽可能多的东西",
+      desc: "用手指在下方平行线上作画。每条线可以单独用，也可以几条组合起来。",
+      hint: "画满 4 个以上线条更划算；画完记得给作品起个标题。",
+      grid: "lines",
+      minUsed: 3
+    }
+  }
+};
+
+/* =========================================================
+   2. 状态与存储
+   ========================================================= */
+const TOTAL_SECONDS = 10 * 60;
+const LS_KEY = "btbu_creativity_v1";
+
+const state = {
+  mode: "A",
+  name: "",
+  sid: "",
+  index: 0,
+  timeLeft: TOTAL_SECONDS,
+  timer: null,
+  answers: { v1: "", v2: "", v3: "", title: "" },
+  artwork: "",
+  gridUsed: 0,
+  coverRatio: 0,
+  submitted: false
+};
+
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+function saveRecord(mode, payload) {
+  try {
+    const store = loadStore();
+    store[mode] = payload;
+    localStorage.setItem(LS_KEY, JSON.stringify(store));
+  } catch (e) { /* 微信隐私模式下可能不可用，忽略 */ }
+}
+
+/* =========================================================
+   3. 页面切换
+   ========================================================= */
+const screens = {
+  intro: document.getElementById("screenIntro"),
+  quiz: document.getElementById("screenQuiz"),
+  result: document.getElementById("screenResult")
+};
+function show(name) {
+  Object.values(screens).forEach(s => s.classList.remove("active"));
+  screens[name].classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+/* =========================================================
+   4. 说明页交互
+   ========================================================= */
+document.querySelectorAll(".mode-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".mode-tab").forEach(t => t.classList.remove("on"));
+    tab.classList.add("on");
+    state.mode = tab.dataset.mode;
+  });
+});
+
+document.getElementById("btnStart").addEventListener("click", () => {
+  state.name = document.getElementById("inpName").value.trim();
+  state.sid = document.getElementById("inpSid").value.trim();
+  startQuiz(state.mode);
+});
+
+/* =========================================================
+   5. 答题流程
+   ========================================================= */
+function currentQuestions() {
+  const m = MODES[state.mode];
+  return [...m.verbal, m.figural];
+}
+
+function startQuiz(mode) {
+  state.mode = mode;
+  state.index = 0;
+  state.timeLeft = TOTAL_SECONDS;
+  state.answers = { v1: "", v2: "", v3: "", title: "" };
+  state.artwork = "";
+  state.gridUsed = 0;
+  state.coverRatio = 0;
+  state.submitted = false;
+
+  document.getElementById("quizModeLabel").textContent = MODES[mode].label;
+  show("quiz");
+  renderQuestion();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(state.timer);
+  updateClock();
+  state.timer = setInterval(() => {
+    state.timeLeft--;
+    updateClock();
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timer);
+      submitQuiz(true);
+    }
+  }, 1000);
+}
+
+function updateClock() {
+  const t = Math.max(0, state.timeLeft);
+  const mm = String(Math.floor(t / 60)).padStart(2, "0");
+  const ss = String(t % 60).padStart(2, "0");
+  const el = document.getElementById("clock");
+  el.textContent = `${mm}:${ss}`;
+  el.classList.toggle("warn", t <= 60);
+}
+
+function renderQuestion() {
+  const qs = currentQuestions();
+  const q = qs[state.index];
+  const total = qs.length;
+
+  document.getElementById("progressBar").style.width = `${((state.index + 1) / total) * 100}%`;
+  document.getElementById("btnPrev").disabled = state.index === 0;
+  const isLast = state.index === total - 1;
+  document.getElementById("btnNext").textContent = isLast ? "提交答卷" : "下一题";
+
+  const body = document.getElementById("qBody");
+  body.classList.remove("fade-in");
+  void body.offsetWidth;
+  body.classList.add("fade-in");
+
+  const stepLabel = `第 ${state.index + 1} / ${total} 题`;
+
+  if (q.grid) {
+    body.innerHTML = `
+      <div class="qtag">${q.tag} · ${stepLabel}</div>
+      <h2 class="qtitle">${q.title}</h2>
+      <p class="qdesc">${q.desc}</p>
+      <div class="qhint">${q.hint}</div>
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="bgCanvas"></canvas>
+        <canvas id="drawCanvas"></canvas>
+      </div>
+      <div class="tools">
+        <button class="tool on" data-color="#1F3864"><span class="dot" style="background:#1F3864"></span>深蓝</button>
+        <button class="tool" data-color="#E8A33D"><span class="dot" style="background:#E8A33D"></span>橙</button>
+        <button class="tool" data-color="#12A150"><span class="dot" style="background:#12A150"></span>绿</button>
+        <button class="tool" id="toolEraser">橡皮</button>
+        <button class="tool" id="toolClear">清空</button>
+      </div>
+      <div class="field" style="margin-top:16px;">
+        <label>给作品起个标题（必填）</label>
+        <input id="inpTitle" type="text" placeholder="例如：圆圆的宇宙" maxlength="24" value="${escapeHtml(state.answers.title)}">
+      </div>
+      <p class="tiny muted" style="margin-top:10px;">已使用图形：<b id="usedCount">0</b> 个（建议 ≥ ${q.minUsed} 个）</p>
+    `;
+    initCanvas(q.grid);
+    document.getElementById("inpTitle").addEventListener("input", e => {
+      state.answers.title = e.target.value;
+    });
+  } else {
+    const key = state.index === 0 ? "v1" : "v2";
+    body.innerHTML = `
+      <div class="qtag">${q.tag} · ${stepLabel}</div>
+      <h2 class="qtitle">${q.title}</h2>
+      <p class="qdesc">${q.desc}</p>
+      <div class="qhint">💡 ${q.hint}</div>
+      <textarea id="txtAns" placeholder="${q.placeholder.replace(/\n/g, "&#10;")}">${escapeHtml(state.answers[key])}</textarea>
+      <div class="counter">
+        <span>已写 <b id="lineCount">0</b> 条（建议 ≥ ${q.minLines} 条）</span>
+        <span>想到就写，别纠结</span>
+      </div>
+    `;
+    const ta = document.getElementById("txtAns");
+    const updateCount = () => {
+      const n = countLines(ta.value);
+      document.getElementById("lineCount").textContent = n;
+    };
+    ta.addEventListener("input", () => {
+      state.answers[key] = ta.value;
+      updateCount();
+    });
+    updateCount();
+  }
+}
+
+document.getElementById("btnPrev").addEventListener("click", () => {
+  if (state.index > 0) {
+    state.index--;
+    renderQuestion();
+  }
+});
+
+document.getElementById("btnNext").addEventListener("click", () => {
+  const qs = currentQuestions();
+  if (state.index < qs.length - 1) {
+    state.index++;
+    renderQuestion();
+  } else {
+    submitQuiz(false);
+  }
+});
+
+/* =========================================================
+   6. 画布（触摸手绘）
+   ========================================================= */
+let drawCtx = null, bgCtx = null, drawCanvas = null, bgCanvas = null;
+let drawing = false, erasing = false, penColor = "#1F3864";
+let cellGeom = { cellW: 0, cellH: 0, cols: 0, rows: 0, pad: 0 };
+
+function initCanvas(gridType) {
+  drawCanvas = document.getElementById("drawCanvas");
+  bgCanvas = document.getElementById("bgCanvas");
+  const wrap = document.getElementById("canvasWrap");
+
+  const width = wrap.clientWidth || 320;
+  const cols = 5, rows = 4;
+  const pad = width * 0.06;
+  const cellW = (width - pad * 2) / cols;
+  const cellH = cellW;
+  const height = cellH * rows + pad * 2;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  [bgCanvas, drawCanvas].forEach(c => {
+    c.width = Math.round(width * dpr);
+    c.height = Math.round(height * dpr);
+    c.style.width = width + "px";
+    c.style.height = height + "px";
+    const ctx = c.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  });
+  bgCtx = bgCanvas.getContext("2d");
+  drawCtx = drawCanvas.getContext("2d", { willReadFrequently: true });
+  drawCtx.lineCap = "round";
+  drawCtx.lineJoin = "round";
+
+  cellGeom = { cellW, cellH, cols, rows, pad };
+  drawBackground(gridType);
+
+  // 还原已有作品（切换题目回来时）
+  if (state.artwork) {
+    const img = new Image();
+    img.onload = () => drawCtx.drawImage(img, 0, 0, width, height);
+    img.src = state.artwork;
+  }
+  bindDrawEvents();
+  updateUsedCount();
+}
+
+function drawBackground(type) {
+  const { cellW, cellH, cols, rows, pad } = cellGeom;
+  const w = cols * cellW + pad * 2;
+  const h = rows * cellH + pad * 2;
+  bgCtx.clearRect(0, 0, w, h);
+  bgCtx.fillStyle = "#FFFFFF";
+  bgCtx.fillRect(0, 0, w, h);
+  bgCtx.strokeStyle = "#2B2B2B";
+  bgCtx.lineWidth = 1.6;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const cx = pad + cellW * (c + 0.5);
+      const cy = pad + cellH * (r + 0.5);
+      if (type === "circles") {
+        bgCtx.beginPath();
+        bgCtx.arc(cx, cy, Math.min(cellW, cellH) * 0.30, 0, Math.PI * 2);
+        bgCtx.stroke();
+      } else {
+        const len = cellW * 0.55;
+        bgCtx.beginPath();
+        bgCtx.moveTo(cx - len / 2, cy);
+        bgCtx.lineTo(cx + len / 2, cy);
+        bgCtx.stroke();
+      }
+    }
+  }
+}
+
+function getPos(e) {
+  const rect = drawCanvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+}
+
+function bindDrawEvents() {
+  const start = (e) => {
+    if (e.cancelable) e.preventDefault();
+    drawing = true;
+    const p = getPos(e);
+    drawCtx.beginPath();
+    drawCtx.moveTo(p.x, p.y);
+    drawCtx.lineTo(p.x + 0.1, p.y + 0.1);
+    drawCtx.strokeStyle = erasing ? "#FFFFFF" : penColor;
+    drawCtx.lineWidth = erasing ? 18 : 3.2;
+    drawCtx.stroke();
+  };
+  const move = (e) => {
+    if (!drawing) return;
+    if (e.cancelable) e.preventDefault();
+    const p = getPos(e);
+    drawCtx.lineTo(p.x, p.y);
+    drawCtx.stroke();
+  };
+  const end = (e) => {
+    if (!drawing) return;
+    drawing = false;
+    persistArtwork();
+    updateUsedCount();
+  };
+
+  drawCanvas.addEventListener("touchstart", start, { passive: false });
+  drawCanvas.addEventListener("touchmove", move, { passive: false });
+  drawCanvas.addEventListener("touchend", end);
+  drawCanvas.addEventListener("touchcancel", end);
+
+  drawCanvas.addEventListener("mousedown", start);
+  drawCanvas.addEventListener("mousemove", move);
+  drawCanvas.addEventListener("mouseup", end);
+  drawCanvas.addEventListener("mouseleave", end);
+}
+
+function persistArtwork() {
+  try {
+    const { cols, rows, cellW, cellH, pad } = cellGeom;
+    const w = cols * cellW + pad * 2;
+    const h = rows * cellH + pad * 2;
+    const tmp = document.createElement("canvas");
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    tmp.width = Math.round(w * dpr);
+    tmp.height = Math.round(h * dpr);
+    const c = tmp.getContext("2d");
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.fillStyle = "#fff";
+    c.fillRect(0, 0, w, h);
+    c.drawImage(bgCanvas, 0, 0, w, h);
+    c.drawImage(drawCanvas, 0, 0, w, h);
+    state.artwork = tmp.toDataURL("image/png");
+  } catch (e) { /* ignore */ }
+}
+
+// 统计被使用的格子数量与覆盖率
+function updateUsedCount() {
+  if (!drawCanvas) return;
+  const { cols, rows, cellW, cellH, pad } = cellGeom;
+  const w = cols * cellW + pad * 2;
+  const h = rows * cellH + pad * 2;
+  let used = 0, painted = 0, total = 0;
+  try {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const data = drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height).data;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x0 = Math.floor((pad + c * cellW) * dpr);
+        const y0 = Math.floor((pad + r * cellH) * dpr);
+        const x1 = Math.min(drawCanvas.width, Math.floor((pad + (c + 1) * cellW) * dpr));
+        const y1 = Math.min(drawCanvas.height, Math.floor((pad + (r + 1) * cellH) * dpr));
+        let cnt = 0, area = 0;
+        for (let y = y0; y < y1; y += 2) {
+          for (let x = x0; x < x1; x += 2) {
+            const i = (y * drawCanvas.width + x) * 4;
+            area++;
+            if (data[i + 3] > 20) cnt++;
+          }
+        }
+        const ratio = area ? cnt / area : 0;
+        if (ratio > 0.05) used++;
+        painted += ratio * area;
+        total += area;
+      }
+    }
+  } catch (e) { /* ignore */ }
+  state.gridUsed = used;
+  state.coverRatio = total ? painted / total : 0;
+  const el = document.getElementById("usedCount");
+  if (el) el.textContent = used;
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest(".tool");
+  if (!t) return;
+  if (t.id === "toolEraser") {
+    erasing = !erasing;
+    t.classList.toggle("on", erasing);
+    return;
+  }
+  if (t.id === "toolClear") {
+    if (drawCtx) {
+      const w = drawCanvas.width, h = drawCanvas.height;
+      drawCtx.save();
+      drawCtx.setTransform(1, 0, 0, 1, 0, 0);
+      drawCtx.clearRect(0, 0, w, h);
+      drawCtx.restore();
+    }
+    state.artwork = "";
+    updateUsedCount();
+    return;
+  }
+  if (t.dataset.color) {
+    penColor = t.dataset.color;
+    erasing = false;
+    document.querySelectorAll(".tool[data-color]").forEach(x => x.classList.remove("on"));
+    document.querySelectorAll("#toolEraser").forEach(x => x.classList.remove("on"));
+    t.classList.add("on");
+  }
+});
+
+/* =========================================================
+   7. 评分
+   ========================================================= */
+function countLines(text) {
+  return splitItems(text).length;
+}
+
+function splitItems(text) {
+  if (!text) return [];
+  // 先按行/分号切分，再处理行内编号与顿号列举（不按逗号切，避免把一句话拆碎）
+  const raw = text.split(/[\n\r；;]+/).flatMap(line =>
+    line.split(/[、]/).filter(Boolean)
+  );
+  const seen = new Set();
+  const out = [];
+  raw.forEach(s => {
+    let t = s.trim().replace(/^[\s\-•·*]+/, "");
+    t = t.replace(/^\d+\s*[.、)．)]\s*/, "");
+    t = t.replace(/^(问题|好处|优点|缺点|用途|用途[:：])[:：]\s*/, "");
+    if (t.length < 2) return;
+    if (seen.has(t)) return;
+    seen.add(t);
+    out.push(t);
+  });
+  return out;
+}
+
+function scoreVerbal(text, cfg) {
+  const items = splitItems(text);
+  const fluency = items.length;
+
+  const catSet = new Set();
+  items.forEach(it => {
+    cfg.categories.forEach(cat => {
+      if (cat.kw.some(k => it.includes(k))) catSet.add(cat.name);
+    });
+  });
+  const flexibility = catSet.size;
+
+  let origSum = 0;
+  items.forEach(it => {
+    const isCommon = cfg.common.some(k => it.includes(k));
+    origSum += isCommon ? 1 : 2;
+  });
+  const originality = items.length ? origSum / items.length : 0;
+
+  let elaSum = 0;
+  items.forEach(it => {
+    const L = it.length;
+    elaSum += L < 6 ? 0 : (L < 12 ? 1 : 2);
+  });
+  const elaboration = items.length ? elaSum / items.length : 0;
+
+  return {
+    fluency,
+    flexibility,
+    originality: round1(originality),
+    elaboration: round1(elaboration),
+    items
+  };
+}
+
+function scoreTitle(title) {
+  const t = (title || "").trim();
+  if (!t) return 0;
+  const abstractKw = ["梦", "故事", "宇宙", "世界", "时光", "记忆", "远方", "心事", "秘密", "幻想", "旅程", "未来", "自由", "诗", "灵魂", "春天", "生命", "告白", "对话", "传说"];
+  const actionKw = ["飞", "游", "奔跑", "盛开", "跳舞", "仰望", "等待", "漂浮", "生长", "降落", "上升", "旋转", "守望", "旅行", "相遇"];
+  if (abstractKw.some(k => t.includes(k)) && t.length >= 5) return 2;
+  if (actionKw.some(k => t.includes(k)) || t.length >= 6) return 1.5;
+  return 1;
+}
+
+function round1(n) { return Math.round(n * 10) / 10; }
+function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+function computeResult() {
+  const m = MODES[state.mode];
+  const v1 = scoreVerbal(state.answers.v1, m.verbal[0]);
+  const v2 = scoreVerbal(state.answers.v2, m.verbal[1]);
+
+  const verbalFluency = v1.fluency + v2.fluency;
+  const verbalFlex = v1.flexibility + v2.flexibility;
+  const verbalOrig = (v1.originality + v2.originality) / 2;
+  const verbalEla = (v1.elaboration + v2.elaboration) / 2;
+
+  const figUsed = state.gridUsed;
+  const figCover = state.coverRatio;
+  const titleScore = scoreTitle(state.answers.title);
+
+  // 归一化为 0-100 便于展示与对比
+  const dims = {
+    fluency: Math.round(clamp(verbalFluency / 14, 0, 1) * 100),
+    flexibility: Math.round(clamp(verbalFlex / 9, 0, 1) * 100),
+    originality: Math.round(clamp(verbalOrig / 2, 0, 1) * 100),
+    elaboration: Math.round(clamp(((verbalEla / 2) * 0.7 + clamp(figCover / 0.35, 0, 1) * 0.3), 0, 1) * 100),
+    graphic: Math.round(clamp(figUsed / 16, 0, 1) * 100),
+    title: Math.round(clamp(titleScore / 2, 0, 1) * 100)
+  };
+
+  const total = Math.round(
+    dims.fluency * 0.24 + dims.flexibility * 0.20 +
+    dims.originality * 0.22 + dims.elaboration * 0.14 +
+    dims.graphic * 0.12 + dims.title * 0.08
+  );
+
+  return {
+    total,
+    dims,
+    raw: {
+      verbalFluency, verbalFlex, verbalOrig, verbalEla,
+      figUsed, figCover: round1(figCover * 100), titleScore,
+      items1: v1.items, items2: v2.items
+    },
+    mode: state.mode,
+    name: state.name,
+    sid: state.sid,
+    title: state.answers.title,
+    artwork: state.artwork,
+    ts: Date.now()
+  };
+}
+
+/* =========================================================
+   8. 提交与结果
+   ========================================================= */
+function submitQuiz(auto) {
+  if (state.submitted) return;
+  state.submitted = true;
+  clearInterval(state.timer);
+
+  // 兜底：确保当前输入已保存
+  const ta = document.getElementById("txtAns");
+  if (ta) {
+    const key = state.index === 0 ? "v1" : "v2";
+    state.answers[key] = ta.value;
+  }
+  if (drawCanvas) {
+    persistArtwork();
+    updateUsedCount();
+  }
+
+  const result = computeResult();
+  saveRecord(state.mode, result);
+  renderResult(result, auto);
+  show("result");
+}
+
+const DIM_LABELS = {
+  fluency: "流畅性 · 想得多",
+  flexibility: "变通性 · 类别广",
+  originality: "独创性 · 够新奇",
+  elaboration: "精细性 · 有细节",
+  graphic: "图形创作 · 画得多",
+  title: "标题抽象 · 有想象"
+};
+
+function renderResult(r, auto) {
+  document.getElementById("resultMeta").textContent =
+    `${MODES[r.mode].label}　${r.name ? r.name + "　" : ""}${r.sid ? r.sid : ""}`;
+
+  const totalEl = document.getElementById("totalScore");
+  let n = 0;
+  const target = r.total;
+  clearInterval(renderResult._anim);
+  renderResult._anim = setInterval(() => {
+    n += Math.max(1, Math.round(target / 26));
+    if (n >= target) { n = target; clearInterval(renderResult._anim); }
+    totalEl.innerHTML = `${n}<small> 分</small>`;
+  }, 26);
+
+  document.getElementById("levelTag").textContent =
+    target >= 80 ? "创造力表现优秀" :
+    target >= 65 ? "创造力表现良好" :
+    target >= 50 ? "创造力表现中等" : "还有很大提升空间";
+
+  const bars = document.getElementById("dimBars");
+  bars.innerHTML = Object.keys(DIM_LABELS).map((k, i) => `
+    <div class="dim-row">
+      <div class="dim-head"><span>${DIM_LABELS[k]}</span><b>${r.dims[k]}</b></div>
+      <div class="bar"><i class="${i % 2 ? "alt" : ""}" style="width:0%" data-w="${r.dims[k]}%"></i></div>
+    </div>
+  `).join("");
+  requestAnimationFrame(() => {
+    bars.querySelectorAll(".bar i").forEach(el => { el.style.width = el.dataset.w; });
+  });
+
+  const artCard = document.getElementById("artCard");
+  if (r.artwork) {
+    artCard.style.display = "block";
+    document.getElementById("artImg").src = r.artwork;
+    document.getElementById("artTitle").textContent =
+      `《${r.title || "未命名"}》　使用图形 ${r.raw.figUsed} 个`;
+  } else {
+    artCard.style.display = "none";
+  }
+
+  renderCompare(r);
+
+  if (auto) {
+    // 时间到自动提交的轻提示
+    const meta = document.getElementById("resultMeta");
+    meta.textContent = "时间到，已自动提交　" + meta.textContent;
+  }
+}
+
+function renderCompare(current) {
+  const store = loadStore();
+  const otherMode = current.mode === "A" ? "B" : "A";
+  const other = store[otherMode];
+  const area = document.getElementById("cmpArea");
+
+  if (!other) {
+    area.innerHTML = `
+      <p class="small muted" style="margin:8px 0 0;line-height:1.7;">
+        尚未完成 ${MODES[otherMode].label}。完成另一卷后，这里会自动显示前后测各维度对比与提升幅度。
+      </p>`;
+    document.getElementById("btnOther").textContent = `去做 ${MODES[otherMode].label}`;
+    document.getElementById("btnOther").dataset.target = otherMode;
+    return;
+  }
+
+  const rows = [
+    ["总分", other.total, current.total],
+    ["流畅性", other.dims.fluency, current.dims.fluency],
+    ["变通性", other.dims.flexibility, current.dims.flexibility],
+    ["独创性", other.dims.originality, current.dims.originality],
+    ["精细性", other.dims.elaboration, current.dims.elaboration],
+    ["图形创作", other.dims.graphic, current.dims.graphic],
+    ["标题抽象", other.dims.title, current.dims.title]
+  ];
+
+  const first = otherMode === "A" ? "前测A" : "后测B";
+  const second = current.mode === "A" ? "前测A" : "后测B";
+  const prevIsFirst = current.mode === "B"; // 当前是B时，other(A)才是前测
+
+  const body = rows.map(([label, o, c]) => {
+    let a = o, b = c;
+    if (!prevIsFirst) { a = c; b = o; } // 当前是A卷：A为前测
+    const diff = b - a;
+    const cls = diff > 0 ? "up" : (diff < 0 ? "down" : "");
+    const sign = diff > 0 ? "+" : "";
+    return `<tr>
+      <td>${label}</td>
+      <td>${a}</td>
+      <td>${b}</td>
+      <td class="${cls}">${sign}${diff}</td>
+    </tr>`;
+  }).join("");
+
+  area.innerHTML = `
+    <table class="cmp-table">
+      <thead>
+        <tr><th>维度</th><th>前测 A</th><th>后测 B</th><th>变化</th></tr>
+      </thead>
+      <tbody>${body}</tbody>
+    </table>
+    <p class="tiny muted" style="margin-top:10px;line-height:1.7;">
+      变化为正表示后测优于前测。单次作答受状态影响较大，建议结合多次测评观察趋势。
+    </p>
+  `;
+  document.getElementById("btnOther").textContent = `重做 ${MODES[otherMode].label}`;
+  document.getElementById("btnOther").dataset.target = otherMode;
+}
+
+/* =========================================================
+   9. 结果页按钮
+   ========================================================= */
+document.getElementById("btnHome").addEventListener("click", () => {
+  clearInterval(state.timer);
+  show("intro");
+});
+
+document.getElementById("btnOther").addEventListener("click", (e) => {
+  const target = e.currentTarget.dataset.target || (state.mode === "A" ? "B" : "A");
+  document.querySelectorAll(".mode-tab").forEach(t => {
+    t.classList.toggle("on", t.dataset.mode === target);
+  });
+  state.mode = target;
+  show("intro");
+  window.scrollTo(0, document.body.scrollHeight);
+});
+
+document.getElementById("btnRetry").addEventListener("click", () => {
+  startQuiz(state.mode);
+});
+
+document.getElementById("btnClear").addEventListener("click", () => {
+  try { localStorage.removeItem(LS_KEY); } catch (e) {}
+  renderCompare({ mode: state.mode, total: 0, dims: { fluency: 0, flexibility: 0, originality: 0, elaboration: 0, graphic: 0, title: 0 } });
+  document.getElementById("btnClear").textContent = "已清除本机记录";
+  setTimeout(() => { document.getElementById("btnClear").textContent = "清除本机记录"; }, 1600);
+});
+
+/* 页面隐藏时停表（避免后台计时跳跃） */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    clearInterval(state.timer);
+  } else if (screens.quiz.classList.contains("active") && !state.submitted) {
+    startTimer();
+  }
+});
+
+/* =========================================================
+   10. 工具函数
+   ========================================================= */
+function escapeHtml(s) {
+  return String(s || "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+</script>
+
+
+</body></html>
