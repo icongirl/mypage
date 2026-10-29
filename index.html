@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html lang="zh-CN"><head>
+<html lang="zh-CN">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#1F3864">
-<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='22' fill='%231F3864'/&gt;&lt;circle cx='50' cy='50' r='26' fill='none' stroke='white' stroke-width='9'/&gt;&lt;/svg&gt;">
-<meta name="description" content="北京工商大学大学生创造力快速测评（前后测对比版）">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="北京工商大学创造力快速测评（前后测对比版）| 3题轻量测评，适合课程前后测、教学研究与课堂反馈：快速了解流畅性、变通��、独创性与精细性表现。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="北京工商大学创造力快速测评 · 前后测对比版">
+<meta property="og:description" content="3题快速创造力测评，支持A/B卷前后测对比，自动生成各维度分数与提升分析。">
+<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%231F3864'/%3E%3Cstop offset='1' stop-color='%232E74B5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='630' fill='url(%23g)'/%3E%3Ccircle cx='180' cy='160' r='96' fill='rgba(255,255,255,0.12)'/%3E%3Ccircle cx='1040' cy='110' r='120' fill='rgba(255,255,255,0.08)'/%3E%3Ccircle cx='980' cy='520' r='160' fill='rgba(255,255,255,0.09)'/%3E%3Crect x='120' y='120' width='960' height='390' rx='36' fill='rgba(255,255,255,0.10)' stroke='rgba(255,255,255,0.25)'/%3E%3Ccircle cx='250' cy='315' r='95' fill='none' stroke='white' stroke-width='14'/%3E%3Cpath d='M225 315h50M250 290v50' stroke='white' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M473 255l115 115 190-220 128 140' fill='none' stroke='rgba(255,255,255,0.9)' stroke-width='18' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ctext x='120' y='520' fill='white' font-size='54' font-weight='700' font-family='Microsoft YaHei, sans-serif'%3E创造力快速测评%3C/text%3E%3Ctext x='120' y='575' fill='rgba(255,255,255,0.80)' font-size='28' font-family='Microsoft YaHei, sans-serif'%3E北京工商大学 • 前后测对比版%3C/text%3E%3C/svg%3E">
+<meta property="og:site_name" content="北京工商大学创造力快速测评">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="北京工商大学创造力快速测评 · 前后测对比版">
+<meta name="twitter:description" content="3题快速创造力测评，自动生成各维度分数并进行前后测对比。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F3864'/%3E%3Ccircle cx='50' cy='50' r='26' fill='none' stroke='white' stroke-width='9'/%3E%3C/svg%3E">
 <title>创造力快速测验 · 北京工商大学</title>
 <style>
 :root{
@@ -22,6 +33,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{margin:0;padding:0;}
+html{background:var(--bg);}
 body{
   background:var(--bg);
   color:var(--text);
@@ -29,8 +41,14 @@ body{
   font-size:15px;
   line-height:1.6;
   -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
   overscroll-behavior-y:contain;
+  overscroll-behavior-x:none;
+  touch-action:manipulation;
+  -webkit-touch-callout:none;
+  user-select:none;
 }
+button,input,textarea{font:inherit;}
 .app{
   max-width:520px;
   margin:0 auto;
@@ -50,8 +68,9 @@ body{
   width:100%;border:none;border-radius:14px;
   padding:15px 16px;font-size:16px;font-weight:600;
   background:var(--brand);color:#fff;
-  font-family:inherit;letter-spacing:.5px;
+  letter-spacing:.5px;
   transition:transform .12s ease,opacity .12s ease;
+  -webkit-appearance:none;
 }
 .btn:active{transform:scale(.985);opacity:.9;}
 .btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand);}
@@ -68,11 +87,31 @@ body{
 
 /* ---------- 封面 ---------- */
 .cover{
+  position:relative;
+  overflow:hidden;
   background:linear-gradient(160deg,#1F3864 0%,#2E74B5 100%);
   color:#fff;padding:calc(34px + env(safe-area-inset-top)) 20px 30px;
   border-bottom-left-radius:26px;border-bottom-right-radius:26px;
 }
-.cover .school{font-size:13px;opacity:.85;letter-spacing:2px;}
+.cover::before,
+.cover::after{
+  content:"";
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,.08);
+  pointer-events:none;
+}
+.cover::before{width:210px;height:210px;right:-50px;top:-60px;}
+.cover::after{width:170px;height:170px;left:-28px;bottom:-54px;}
+.cover-inner{position:relative;z-index:1;}
+.cover .school{font-size:13px;opacity:.92;letter-spacing:2px;}
+.cover .brand-mark{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:16px;
+  background:rgba(255,255,255,.14);color:#fff;
+  border:1px solid rgba(255,255,255,.18);
+  font-weight:700;font-size:20px;letter-spacing:1px;
+  margin-bottom:10px;
+}
 .cover h1{font-size:26px;margin:10px 0 6px;letter-spacing:1px;line-height:1.35;}
 .cover .tag{
   display:inline-block;margin-top:8px;padding:4px 10px;border-radius:999px;
@@ -81,7 +120,7 @@ body{
 .meta-row{display:flex;gap:10px;margin-top:16px;}
 .meta-box{
   flex:1;background:rgba(255,255,255,.13);border-radius:12px;
-  padding:10px;text-align:center;
+  padding:10px;text-align:center;border:1px solid rgba(255,255,255,.10);
 }
 .meta-box b{display:block;font-size:18px;letter-spacing:.5px;}
 .meta-box span{font-size:11px;opacity:.85;}
@@ -104,6 +143,7 @@ body{
   width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;
   padding:12px 14px;font-size:15px;font-family:inherit;color:var(--text);
   outline:none;transition:border-color .15s;
+  -webkit-appearance:none;
 }
 .field input:focus{border-color:var(--brand2);}
 
@@ -117,6 +157,7 @@ body{
   position:sticky;top:0;z-index:20;
   background:rgba(244,246,250,.94);
   backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
   padding:calc(10px + env(safe-area-inset-top)) 18px 10px;
   border-bottom:1px solid var(--line);
 }
@@ -148,6 +189,7 @@ textarea{
   border-radius:14px;padding:14px;font-size:15px;line-height:1.7;
   font-family:inherit;color:var(--text);background:#fff;outline:none;
   transition:border-color .15s;
+  -webkit-appearance:none;
 }
 textarea:focus{border-color:var(--brand2);}
 .counter{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--sub);}
@@ -160,7 +202,7 @@ textarea:focus{border-color:var(--brand2);}
 }
 .canvas-wrap canvas{display:block;width:100%;height:auto;touch-action:none;}
 #drawCanvas{position:absolute;left:0;top:0;}
-.tools{display:flex;align-items:center;gap:8px;margin-top:12px;}
+.tools{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;}
 .tool{
   display:flex;align-items:center;justify-content:center;gap:5px;
   border:1px solid var(--line);background:#fff;border-radius:11px;
@@ -222,14 +264,17 @@ textarea:focus{border-color:var(--brand2);}
   <!-- ============ 说明页 ============ -->
   <section id="screenIntro" class="screen active">
     <div class="cover">
-      <div class="school">北京工商大学</div>
-      <h1>创造力快速测验</h1>
-      <div>前后测对比版 · 3 题 / 约 6 分钟</div>
-      <div class="tag">基于 Torrance 创造性思维理论</div>
-      <div class="meta-row">
-        <div class="meta-box"><b>3<small style="font-size:11px;"> 题</small></b><span>两个言语题 + 一个画图题</span></div>
-        <div class="meta-box"><b>10<small style="font-size:11px;"> 分钟</small></b><span>全程倒计时</span></div>
-        <div class="meta-box"><b>4<small style="font-size:11px;"> 维度</small></b><span>流畅·变通·独创·精细</span></div>
+      <div class="cover-inner">
+        <div class="school">北京工商大学</div>
+        <div class="brand-mark">B</div>
+        <h1>创造力快速测验</h1>
+        <div>前后测对比版 · 3 题 / 约 6 分钟</div>
+        <div class="tag">基于 Torrance 创造性思维理论</div>
+        <div class="meta-row">
+          <div class="meta-box"><b>3<small style="font-size:11px;"> 题</small></b><span>两个言语题 + 一个画图题</span></div>
+          <div class="meta-box"><b>10<small style="font-size:11px;"> 分钟</small></b><span>全程倒计时</span></div>
+          <div class="meta-box"><b>4<small style="font-size:11px;"> 维度</small></b><span>流畅·变通·独创·精细</span></div>
+        </div>
       </div>
     </div>
 
@@ -358,7 +403,7 @@ const MODES = {
         key: "a2",
         tag: "言语题 · 假设想象",
         title: "如果明天手机突然全部消失……",
-        desc: "假如明天醒来，全世界的手机全都消失了（且无法再造），这一天会怎样？",
+        desc: "假如明天醒来，全世界的手机全都消失了（且无法再造）��这一天会怎样？",
         hint: "请分别写出「可能出现的问题」和「可能带来的好处」，每行一条，共至少 5 条。",
         placeholder: "问题：无法扫码支付\n问题：联系不上家人\n好处：终于可以安静看书\n……",
         minLines: 5,
@@ -453,7 +498,8 @@ const state = {
   artwork: "",
   gridUsed: 0,
   coverRatio: 0,
-  submitted: false
+  submitted: false,
+  currentGridType: "circles"
 };
 
 function loadStore() {
@@ -464,6 +510,7 @@ function loadStore() {
     return {};
   }
 }
+
 function saveRecord(mode, payload) {
   try {
     const store = loadStore();
@@ -480,6 +527,7 @@ const screens = {
   quiz: document.getElementById("screenQuiz"),
   result: document.getElementById("screenResult")
 };
+
 function show(name) {
   Object.values(screens).forEach(s => s.classList.remove("active"));
   screens[name].classList.add("active");
@@ -520,6 +568,7 @@ function startQuiz(mode) {
   state.gridUsed = 0;
   state.coverRatio = 0;
   state.submitted = false;
+  state.currentGridType = MODES[mode].figural.grid;
 
   document.getElementById("quizModeLabel").textContent = MODES[mode].label;
   show("quiz");
@@ -567,6 +616,7 @@ function renderQuestion() {
   const stepLabel = `第 ${state.index + 1} / ${total} 题`;
 
   if (q.grid) {
+    state.currentGridType = q.grid;
     body.innerHTML = `
       <div class="qtag">${q.tag} · ${stepLabel}</div>
       <h2 class="qtitle">${q.title}</h2>
@@ -672,7 +722,6 @@ function initCanvas(gridType) {
   cellGeom = { cellW, cellH, cols, rows, pad };
   drawBackground(gridType);
 
-  // 还原已有作品（切换题目回来时）
   if (state.artwork) {
     const img = new Image();
     img.onload = () => drawCtx.drawImage(img, 0, 0, width, height);
@@ -742,6 +791,12 @@ function bindDrawEvents() {
     persistArtwork();
     updateUsedCount();
   };
+
+  drawCanvas.onpointerdown = start;
+  drawCanvas.onpointermove = move;
+  drawCanvas.onpointerup = end;
+  drawCanvas.onpointerleave = end;
+  drawCanvas.onpointercancel = end;
 
   drawCanvas.addEventListener("touchstart", start, { passive: false });
   drawCanvas.addEventListener("touchmove", move, { passive: false });
@@ -839,6 +894,15 @@ document.addEventListener("click", (e) => {
   }
 });
 
+window.addEventListener("resize", () => {
+  if (screens.quiz.classList.contains("active") && state.currentGridType && drawCanvas) {
+    const q = currentQuestions()[state.index];
+    if (q && q.grid) {
+      initCanvas(q.grid);
+    }
+  }
+});
+
 /* =========================================================
    7. 评分
    ========================================================= */
@@ -848,7 +912,6 @@ function countLines(text) {
 
 function splitItems(text) {
   if (!text) return [];
-  // 先按行/分号切分，再处理行内编号与顿号列举（不按逗号切，避免把一句话拆碎）
   const raw = text.split(/[\n\r；;]+/).flatMap(line =>
     line.split(/[、]/).filter(Boolean)
   );
@@ -928,7 +991,6 @@ function computeResult() {
   const figCover = state.coverRatio;
   const titleScore = scoreTitle(state.answers.title);
 
-  // 归一化为 0-100 便于展示与对比
   const dims = {
     fluency: Math.round(clamp(verbalFluency / 14, 0, 1) * 100),
     flexibility: Math.round(clamp(verbalFlex / 9, 0, 1) * 100),
@@ -969,7 +1031,6 @@ function submitQuiz(auto) {
   state.submitted = true;
   clearInterval(state.timer);
 
-  // 兜底：确保当前输入已保存
   const ta = document.getElementById("txtAns");
   if (ta) {
     const key = state.index === 0 ? "v1" : "v2";
@@ -1038,7 +1099,6 @@ function renderResult(r, auto) {
   renderCompare(r);
 
   if (auto) {
-    // 时间到自动提交的轻提示
     const meta = document.getElementById("resultMeta");
     meta.textContent = "时间到，已自动提交　" + meta.textContent;
   }
@@ -1070,13 +1130,11 @@ function renderCompare(current) {
     ["标题抽象", other.dims.title, current.dims.title]
   ];
 
-  const first = otherMode === "A" ? "前测A" : "后测B";
-  const second = current.mode === "A" ? "前测A" : "后测B";
-  const prevIsFirst = current.mode === "B"; // 当前是B时，other(A)才是前测
+  const prevIsFirst = current.mode === "B";
 
   const body = rows.map(([label, o, c]) => {
     let a = o, b = c;
-    if (!prevIsFirst) { a = c; b = o; } // 当前是A卷：A为前测
+    if (!prevIsFirst) { a = c; b = o; }
     const diff = b - a;
     const cls = diff > 0 ? "up" : (diff < 0 ? "down" : "");
     const sign = diff > 0 ? "+" : "";
@@ -1147,9 +1205,9 @@ document.addEventListener("visibilitychange", () => {
 function escapeHtml(s) {
   return String(s || "")
     .replace(/&/g, "&amp;").replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    .replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
 }
 </script>
 
-
-</body></html>
+</body>
+</html>
